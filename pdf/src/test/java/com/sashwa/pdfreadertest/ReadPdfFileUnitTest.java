@@ -1,4 +1,4 @@
-package com.baeldung.pdfreadertest;
+package com.sashwa.pdfreadertest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

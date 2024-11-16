@@ -1,28 +1,31 @@
-package com.baeldung.pdfthymeleaf;
+package com.sashwa.pdfthymeleaf;
 
 import com.lowagie.text.DocumentException;
+import org.junit.Test;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
-public class PDFThymeleafExample {
+import static org.junit.Assert.assertTrue;
 
-    public static void main(String[] args) throws IOException, DocumentException {
-        PDFThymeleafExample thymeleaf2Pdf = new PDFThymeleafExample();
-        String html = thymeleaf2Pdf.parseThymeleafTemplate();
-        thymeleaf2Pdf.generatePdfFromHtml(html);
+public class PDFThymeleafUnitTest {
+
+    @Test
+    public void givenThymeleafTemplate_whenParsedAndRenderedToPDF_thenItShouldNotBeEmpty() throws DocumentException, IOException {
+        String html = parseThymeleafTemplate();
+
+        ByteArrayOutputStream outputStream = generatePdfOutputStreamFromHtml(html);
+
+        assertTrue(outputStream.size() > 0);
     }
 
-    public void generatePdfFromHtml(String html) throws IOException, DocumentException {
-        String outputFolder = System.getProperty("user.home") + File.separator + "thymeleaf.pdf";
-        OutputStream outputStream = new FileOutputStream(outputFolder);
+    private ByteArrayOutputStream generatePdfOutputStreamFromHtml(String html) throws IOException, DocumentException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         ITextRenderer renderer = new ITextRenderer();
         renderer.setDocumentFromString(html);
@@ -30,6 +33,7 @@ public class PDFThymeleafExample {
         renderer.createPDF(outputStream);
 
         outputStream.close();
+        return outputStream;
     }
 
     private String parseThymeleafTemplate() {
